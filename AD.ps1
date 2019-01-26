@@ -7,7 +7,7 @@ Rename-NetAdapter -Name ethernet -NewName Internet
 Rename-NetAdapter -Name 'ethernet 2' -NewName Internal
 Rename-Computer -NewName M1
 Restart-Computer
-# CSERVER1
+# M2
 Rename-NetAdapter -Name ethernet -NewName internal
 Rename-Computer -NewName M2
 Restart-Computer
@@ -38,3 +38,8 @@ Install-ADDSForest `
 -SysvolPath "C:\Windows\SYSVOL" `
 -Force:$true
 Add-DhcpServerInDC
+#4. Join M2 to the domain
+New-ADComputer -Name M2
+#M2
+Add-Computer -DomainName exam.text -DomainCredential Administrator
+Get-ADComputer m2
