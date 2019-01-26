@@ -4,9 +4,9 @@
 Get-NetAdapter
 Rename-NetAdapter -Name ethernet -NewName Internet
 Rename-NetAdapter -Name 'ethernet 2' -NewName Internal
-Rename-Computer -NewName DC1
+Rename-Computer -NewName M1
 Restart-Computer
 # CSERVER1
 Rename-NetAdapter -Name ethernet -NewName internal
-Rename-Computer -NewName CSERVER1
+Rename-Computer -NewName M2
 Restart-Computer
