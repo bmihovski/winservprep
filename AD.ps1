@@ -43,3 +43,38 @@ New-ADComputer -Name M2
 #M2
 Add-Computer -DomainName exam.text -DomainCredential Administrator
 Get-ADComputer m2
+#5. Create the following hierarchy of AD objects:
+#        ◦ OU: IT
+#            ▪ USR: Ivan Petkov (i.petkov)
+#            ▪ USR: Tosho Tishev (t.tishev)
+#        ◦ OU: Sales
+#            ▪ USR: Petya Staikova (p.staikova)
+#            ▪ USR: Mira Koleva (m.koleva)
+#        ◦ GS: GS IT with members users in IT OU
+#        ◦ GS: GS Sales with members users in Sales OU
+New-ADOrganizationalUnit -Name IT
+New-ADOrganizationalUnit -Name Sales
+New-ADGroup -Name 'GS IT' -Description 'members users in IT OU' -GroupCategory Security -GroupScope DomainLocal -SamAccountName 'GS IT' `
+-Path 'ou=it,dc=exam,dc=text'
+New-ADGroup -Name 'GS Sales' -Description 'members users in Sales OU' -GroupCategory Security -GroupScope DomainLocal -SamAccountName 'GS Sales' `
+-Path 'ou=sales,dc=exam,dc=text'
+New-ADUser -Name Ivan -SamAccountName i.petkov -GivenName Ivan -Surname Petkov `
+-AccountPassword (ConvertTo-SecureString -AsPlainText Password1 -Force) `
+-UserPrincipalName i.petkov@exam.text `
+-Enabled $true
+New-ADUser -Name Tosho -SamAccountName t.tishev -GivenName Tosho -Surname Tishev `
+-AccountPassword (ConvertTo-SecureString -AsPlainText Password1 -Force) `
+-UserPrincipalName t.tishev@exam.text `
+-Enabled $true
+New-ADUser -Name Petya -SamAccountName p.staikova -GivenName Petya -Surname Staikova `
+-AccountPassword (ConvertTo-SecureString -AsPlainText Password1 -Force) `
+-UserPrincipalName p.staikova@exam.text `
+-Enabled $true
+New-ADUser -Name Mira -SamAccountName m.koleva -GivenName Mira -Surname Koleva `
+-AccountPassword (ConvertTo-SecureString -AsPlainText Password1 -Force) `
+-UserPrincipalName m.koleva@exam.text `
+-Enabled $true
+Get-ADGroup -Identity 'GS IT'
+Add-ADGroupMember -Identity 'GS IT' -Members i.petkov,t.tishev
+Get-ADGroup -Identity 'gs sales'
+Add-ADGroupMember -Identity 'gs sales' -Members p.staikova,m.koleva
