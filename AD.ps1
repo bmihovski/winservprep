@@ -22,3 +22,19 @@ Add-DhcpServerv4Scope -Name 'DHCP Internal Network' -StartRange 192.168.100.100 
 Get-DhcpServerv4Binding
 Set-DhcpServerv4OptionValue -OptionId 3 -Value 192.168.100.1
 Set-DhcpServerv4OptionValue -OptionId 6 -Value 192.168.100.1 -Force
+#3. Setup an AD DS on M1 with domain name exam.text
+Install-WindowsFeature -Name ad-domain-services -IncludeManagementTools
+Import-Module ADDSDeployment
+Install-ADDSForest `
+-CreateDnsDelegation:$false `
+-DatabasePath "C:\Windows\NTDS" `
+-DomainMode "WinThreshold" `
+-DomainName "exam.text" `
+-DomainNetbiosName "EXAM" `
+-ForestMode "WinThreshold" `
+-InstallDns:$true `
+-LogPath "C:\Windows\NTDS" `
+-NoRebootOnCompletion:$false `
+-SysvolPath "C:\Windows\SYSVOL" `
+-Force:$true
+Add-DhcpServerInDC
