@@ -1,6 +1,7 @@
 ﻿#1. Create an infrastructure with two Windows Server machines:
 #    ◦ M1 with two network adapters – one connected to the external LAN and one connected to an internal (private) network
 #    ◦ M2 with one network adapter connected to the internal (private) network
+# git push --porcelain
 Get-NetAdapter
 Rename-NetAdapter -Name ethernet -NewName Internet
 Rename-NetAdapter -Name 'ethernet 2' -NewName Internal
