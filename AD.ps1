@@ -97,3 +97,21 @@ Initialize-Volume -DriveLetter X -FileSystem NTFS -NewFileSystemLabel DATA
 Install-WindowsFeature -Name file-services
 mkdir C:\Shared
 New-SmbShare -Name Shared -Path C:\Shared -FullAccess Everyone
+#9. Create and apply a GPO that maps the \\M1\Shared as Z:\ only for users in Sales OU
+# Add new policy object MountSales and change targeting from common and tick reconnect
+# Link rule to Sales OU
+# M2 with sales user
+Get-SmbMapping Z
+#10. Create scheduled daily (every day at 21:30) backup of C:\Shared to X:\Backup
+Install-WindowsFeature -name Windows-Server-Backup -IncludeManagementTools
+$policy = New-WBPolicy
+$fileSpec = New-WBFileSpec -FileSpec C:\Shared
+Add-WBFileSpec -Policy $policy -FileSpec $fileSpec
+Get-WBDisk
+$backupLocation = New-WBBackupTarget -VolumePath X:
+Add-WBBackupTarget -Policy $policy -Target $backupLocation
+Set-WBSchedule -Policy $Policy "09:30 PM"
+Set-WBVssBackupOptions -Policy $policy -VssCopyBackup
+Set-WBPolicy -Policy $policy
+Get-WBSchedule -Policy $policy
+# Note it is not possible to backup on folder only to value or network path the requirement is wrong
