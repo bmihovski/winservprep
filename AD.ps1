@@ -120,7 +120,8 @@ Get-WBSchedule -Policy $policy
 mkdir c:\Scripts
 mkdir c:\Temp
 echo 'test' > C:\Shared\test.txt
-echo "Write-Host (dir c:\Shared | measure).Count | Out-File -FilePath 'C:\Temp\monitor-files.log' -Append;" > C:\Scripts\monitor.ps1
+"Get-ChildItem C:\Shared -Recurse -File | Measure-Object | %{$_.Count} | Out-File -FilePath 'C:\Temp\monitor-files.log' -Append;"
+cp monitor.ps1 C:\Scripts\monitor.ps1
 cat C:\Scripts\monitor.ps1
 $action = New-ScheduledTaskAction -Execute C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Argument C:\Scripts\monitor.ps1
 $interval = (New-TimeSpan -Minutes 2)
@@ -130,3 +131,5 @@ $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).Date -RepetitionInterva
 $task = New-ScheduledTask -Action $action -Trigger $trigger
 Register-ScheduledTask -TaskName CPULOAD -InputObject $task
 echo 'test' > C:\Shared\test2.txt
+cat C:\Temp\monitor-files.log
+echo 'test' > C:\Shared\test3.txt

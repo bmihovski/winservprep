@@ -1,0 +1,1 @@
+﻿Get-ChildItem C:\Shared -Recurse -File | Measure-Object | %{$_.Count} | Out-File -FilePath 'C:\Temp\monitor-files.log' -Append;
