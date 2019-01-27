@@ -52,6 +52,7 @@ Get-ADComputer m2
 #            ▪ USR: Mira Koleva (m.koleva)
 #        ◦ GS: GS IT with members users in IT OU
 #        ◦ GS: GS Sales with members users in Sales OU
+# windows core allow esc to change the user only if basic session is used
 New-ADOrganizationalUnit -Name IT
 New-ADOrganizationalUnit -Name Sales
 New-ADGroup -Name 'GS IT' -Description 'members users in IT OU' -GroupCategory Security -GroupScope DomainLocal -SamAccountName 'GS IT' `
@@ -78,3 +79,12 @@ Get-ADGroup -Identity 'GS IT'
 Add-ADGroupMember -Identity 'GS IT' -Members i.petkov,t.tishev
 Get-ADGroup -Identity 'gs sales'
 Add-ADGroupMember -Identity 'gs sales' -Members p.staikova,m.koleva
+#6. Create and apply a GPO that enables remote management and ping on all machines in the domain
+# Go to Computer Configuration > Policies > Administrative Templates > Windows Components > Windows Remote Management (WinRM) > WinRM Service > Allow remote server management through WinRM.
+# Go to Computer Configuration > Policies > Preferences > Control Panel Settings. And right-click Services and choose New > Service.
+# Choose Automatic (Delayed Start) as startup type, pick WinRM as the service name, set Start service as the action.
+# Go to Computer Configuration\Policies\Administrative Templates\Network\Network Connections\Windows Firewall\Domain Profile and set Windows Firewall: Protect all network connections to Enabled
+# Go to Computer Configuration\Policies\Windows Settings\Security Settings\Windows Firewall with Advanced Security\Inbound Rules enable predefined rules Windows Remote Management WRM
+# To reduce the exposure to this service we can remove the Private and only leave only Domain profile in place. Double-click the new rule we just created, go to Advanced tab and uncheck the Private option from the Profiles section.
+# Add custom inbound rule protocol and ports icmpv4 and profile domain
+# restart M2
