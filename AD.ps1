@@ -63,18 +63,22 @@ New-ADUser -Name Ivan -SamAccountName i.petkov -GivenName Ivan -Surname Petkov `
 -AccountPassword (ConvertTo-SecureString -AsPlainText Password1 -Force) `
 -UserPrincipalName i.petkov@exam.text `
 -Enabled $true
+Move-ADObject -Identity 'cn=ivan,cn=users,dc=exam,dc=text' -TargetPath 'OU=IT,DC=EXAM,DC=TEXT'
 New-ADUser -Name Tosho -SamAccountName t.tishev -GivenName Tosho -Surname Tishev `
 -AccountPassword (ConvertTo-SecureString -AsPlainText Password1 -Force) `
 -UserPrincipalName t.tishev@exam.text `
 -Enabled $true
+Move-ADObject -Identity 'cn=tosho,cn=users,dc=exam,dc=text' -TargetPath 'OU=IT,DC=EXAM,DC=TEXT'
 New-ADUser -Name Petya -SamAccountName p.staikova -GivenName Petya -Surname Staikova `
 -AccountPassword (ConvertTo-SecureString -AsPlainText Password1 -Force) `
 -UserPrincipalName p.staikova@exam.text `
 -Enabled $true
+Move-ADObject -Identity 'cn=petya,cn=users,dc=exam,dc=text' -TargetPath 'OU=Sales,DC=EXAM,DC=TEXT'
 New-ADUser -Name Mira -SamAccountName m.koleva -GivenName Mira -Surname Koleva `
 -AccountPassword (ConvertTo-SecureString -AsPlainText Password1 -Force) `
 -UserPrincipalName m.koleva@exam.text `
 -Enabled $true
+Move-ADObject -Identity 'cn=mira,cn=users,dc=exam,dc=text' -TargetPath 'OU=Sales,DC=EXAM,DC=TEXT'
 Get-ADGroup -Identity 'GS IT'
 Add-ADGroupMember -Identity 'GS IT' -Members i.petkov,t.tishev
 Get-ADGroup -Identity 'gs sales'
@@ -98,7 +102,7 @@ Install-WindowsFeature -Name file-services
 mkdir C:\Shared
 New-SmbShare -Name Shared -Path C:\Shared -FullAccess Everyone
 #9. Create and apply a GPO that maps the \\M1\Shared as Z:\ only for users in Sales OU
-# Add new policy object MountSales and change targeting from common and tick reconnect
+# Add new policy object MountSales with action create and change targeting from common and connect it to OU and tick reconnect
 # Link rule to Sales OU
 # M2 with sales user
 Get-SmbMapping Z
