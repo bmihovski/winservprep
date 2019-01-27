@@ -88,3 +88,8 @@ Add-ADGroupMember -Identity 'gs sales' -Members p.staikova,m.koleva
 # To reduce the exposure to this service we can remove the Private and only leave only Domain profile in place. Double-click the new rule we just created, go to Advanced tab and uncheck the Private option from the Profiles section.
 # Add custom inbound rule protocol and ports icmpv4 and profile domain
 # restart M2
+#7. Format the second HDD of M1 with NTFS, label it DATA, and mount it as X:
+get-disk
+Initialize-Disk -Number 1 -PartitionStyle GPT 
+New-Partition -DiskNumber 1 -DriveLetter X -UseMaximumSize 
+Initialize-Volume -DriveLetter X -FileSystem NTFS -NewFileSystemLabel DATA
