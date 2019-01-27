@@ -93,3 +93,7 @@ get-disk
 Initialize-Disk -Number 1 -PartitionStyle GPT 
 New-Partition -DiskNumber 1 -DriveLetter X -UseMaximumSize 
 Initialize-Volume -DriveLetter X -FileSystem NTFS -NewFileSystemLabel DATA
+#8. On M1 create share \\M1\Shared for folder C:\Shared and set permissions Full Control to Everyone
+Install-WindowsFeature -Name file-services
+mkdir C:\Shared
+New-SmbShare -Name Shared -Path C:\Shared -FullAccess Everyone
