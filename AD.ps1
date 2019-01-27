@@ -115,3 +115,18 @@ Set-WBVssBackupOptions -Policy $policy -VssCopyBackup
 Set-WBPolicy -Policy $policy
 Get-WBSchedule -Policy $policy
 # Note it is not possible to backup on folder only to value or network path the requirement is wrong
+#11. Create a PowerShell script monitor.ps1 in C:\Scripts to count the files in C:\Shared and save the result
+# in C:\Temp in a text file with a name monitor-files.log and schedule it to run every 2 minutes
+mkdir c:\Scripts
+mkdir c:\Temp
+echo 'test' > C:\Shared\test.txt
+echo "Write-Host (dir c:\Shared | measure).Count | Out-File -FilePath 'C:\Temp\monitor-files.log' -Append;" > C:\Scripts\monitor.ps1
+cat C:\Scripts\monitor.ps1
+$action = New-ScheduledTaskAction -Execute C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Argument C:\Scripts\monitor.ps1
+$interval = (New-TimeSpan -Minutes 2)
+$dt= ([DateTime]::Now)
+$duration = $dt.AddYears(25) -$dt;
+$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).Date -RepetitionInterval $interval -RepetitionDuration $duration 
+$task = New-ScheduledTask -Action $action -Trigger $trigger
+Register-ScheduledTask -TaskName CPULOAD -InputObject $task
+echo 'test' > C:\Shared\test2.txt
